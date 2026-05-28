@@ -952,43 +952,63 @@
               </div>
             </div>
 
-            <!-- Contacts preview -->
+            <!-- Contacts preview with per-BL tab (Mark feedback 28 May) -->
             <div class="bg-card border border-card-border rounded-lg">
               <div class="px-5 py-3 border-b border-card-border flex items-center justify-between">
                 <h3 class="text-[13px] font-bold text-text-strong">Key Contacts</h3>
                 <button class="text-[11px] font-bold text-brand-lime hover:underline">View all 12 →</button>
               </div>
-              <div class="divide-y divide-card-border-soft">
-                <div class="px-5 py-3 flex items-center justify-between">
+              <!-- Per-BL filter tabs -->
+              <div class="px-3 pt-2.5 border-b border-card-border-soft flex items-center gap-1 overflow-x-auto">
+                <button onclick="filterAccountContacts('all', this)" class="acct-contact-tab active text-[11px] font-bold px-3 py-1.5 rounded-t border-b-2 border-brand-lime bg-brand-lime-tint text-nav-navy">All BLs <span class="text-[9px] text-text-muted">(12)</span></button>
+                <button onclick="filterAccountContacts('cat', this)" class="acct-contact-tab text-[11px] font-bold px-3 py-1.5 rounded-t border-b-2 border-transparent text-text-muted hover:text-text-body hover:bg-card-row-shaded">Travelers × CAT <span class="text-[9px]">(5)</span></button>
+                <button onclick="filterAccountContacts('property', this)" class="acct-contact-tab text-[11px] font-bold px-3 py-1.5 rounded-t border-b-2 border-transparent text-text-muted hover:text-text-body hover:bg-card-row-shaded">Travelers × Property <span class="text-[9px]">(3)</span></button>
+                <button onclick="filterAccountContacts('daily', this)" class="acct-contact-tab text-[11px] font-bold px-3 py-1.5 rounded-t border-b-2 border-transparent text-text-muted hover:text-text-body hover:bg-card-row-shaded">Travelers × Daily <span class="text-[9px]">(4)</span></button>
+              </div>
+              <div class="divide-y divide-card-border-soft" id="acct-contacts-list">
+                <div data-bls="all cat property" class="acct-contact-row px-5 py-3 flex items-center justify-between">
                   <div class="flex items-center gap-3">
                     <div class="w-8 h-8 bg-brand-lime-tint rounded-full flex items-center justify-center text-[11px] font-bold text-nav-navy">JS</div>
                     <div>
                       <div class="font-bold text-[13px] text-text-strong">John Smith</div>
-                      <div class="text-[11px] text-text-muted">VP Claims · Decision Maker</div>
+                      <div class="text-[11px] text-text-muted">VP Claims · Decision Maker · <span class="text-good font-semibold">CAT + Property</span></div>
                     </div>
                   </div>
                   <span class="text-[10px] font-bold text-good bg-good-bg px-2 py-0.5 rounded">Qualified</span>
                 </div>
-                <div class="px-5 py-3 flex items-center justify-between">
+                <div data-bls="all cat" class="acct-contact-row px-5 py-3 flex items-center justify-between">
                   <div class="flex items-center gap-3">
                     <div class="w-8 h-8 bg-brand-lime-tint rounded-full flex items-center justify-center text-[11px] font-bold text-nav-navy">SL</div>
                     <div>
                       <div class="font-bold text-[13px] text-text-strong">Sarah Lee</div>
-                      <div class="text-[11px] text-text-muted">CAT Director</div>
+                      <div class="text-[11px] text-text-muted">CAT Director · <span class="text-good font-semibold">CAT</span></div>
                     </div>
                   </div>
                   <span class="text-[10px] font-bold text-good bg-good-bg px-2 py-0.5 rounded">Qualified</span>
                 </div>
-                <div class="px-5 py-3 flex items-center justify-between">
+                <div data-bls="all property daily" class="acct-contact-row px-5 py-3 flex items-center justify-between">
                   <div class="flex items-center gap-3">
                     <div class="w-8 h-8 bg-card-row-shaded rounded-full flex items-center justify-center text-[11px] font-bold text-text-muted">MK</div>
                     <div>
                       <div class="font-bold text-[13px] text-text-strong">Marcus Kim</div>
-                      <div class="text-[11px] text-text-muted">Claims Operations Manager</div>
+                      <div class="text-[11px] text-text-muted">Claims Operations Manager · <span class="text-text-muted font-semibold">Property + Daily</span></div>
                     </div>
                   </div>
                   <span class="text-[10px] font-bold text-text-muted bg-card-row-shaded px-2 py-0.5 rounded">Unqualified</span>
                 </div>
+                <div data-bls="all daily" class="acct-contact-row px-5 py-3 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-brand-lime-tint rounded-full flex items-center justify-center text-[11px] font-bold text-nav-navy">RM</div>
+                    <div>
+                      <div class="font-bold text-[13px] text-text-strong">Rajneesh Mehta</div>
+                      <div class="text-[11px] text-text-muted">Director, Daily Claims Ops · <span class="text-good font-semibold">Daily</span></div>
+                    </div>
+                  </div>
+                  <span class="text-[10px] font-bold text-good bg-good-bg px-2 py-0.5 rounded">Active</span>
+                </div>
+              </div>
+              <div class="px-5 py-2 border-t border-card-border-soft text-[10px] text-text-muted">
+                Tip: click a BL tab above to filter contacts by who operates that line.
               </div>
             </div>
           </div>
@@ -1251,31 +1271,69 @@
         </div>
 
         <div class="bg-card border border-card-border rounded-lg p-5">
-          <div class="grid grid-cols-5 gap-3 mb-4">
-            <div class="bg-card-row-shaded rounded p-3">
+          <!-- Live status filter buttons (click to filter) -->
+          <div class="grid grid-cols-6 gap-2 mb-4">
+            <button onclick="filterContactsByStatus('all', this)" class="contact-status-btn active bg-nav-navy text-white rounded p-3 text-left">
+              <div class="text-[10px] uppercase tracking-wider opacity-80 font-bold">All</div>
+              <div class="text-xl font-extrabold mt-1">28,550</div>
+            </button>
+            <button onclick="filterContactsByStatus('unqualified', this)" class="contact-status-btn bg-card-row-shaded hover:bg-card-border rounded p-3 text-left transition-colors">
               <div class="text-[10px] uppercase tracking-wider text-text-subtle font-bold">Unqualified</div>
               <div class="text-xl font-extrabold text-text-strong mt-1">27,902</div>
-            </div>
-            <div class="bg-good-bg rounded p-3">
+            </button>
+            <button onclick="filterContactsByStatus('qualified', this)" class="contact-status-btn bg-good-bg hover:opacity-90 rounded p-3 text-left transition-opacity">
               <div class="text-[10px] uppercase tracking-wider text-good font-bold">Qualified</div>
               <div class="text-xl font-extrabold text-good mt-1">412</div>
-            </div>
-            <div class="bg-good-bg rounded p-3">
+            </button>
+            <button onclick="filterContactsByStatus('active', this)" class="contact-status-btn bg-good-bg hover:opacity-90 rounded p-3 text-left transition-opacity">
               <div class="text-[10px] uppercase tracking-wider text-good font-bold">Active</div>
               <div class="text-xl font-extrabold text-good mt-1">87</div>
-            </div>
-            <div class="bg-warn-bg rounded p-3">
+            </button>
+            <button onclick="filterContactsByStatus('inactive', this)" class="contact-status-btn bg-warn-bg hover:opacity-90 rounded p-3 text-left transition-opacity">
               <div class="text-[10px] uppercase tracking-wider text-warn font-bold">Inactive</div>
               <div class="text-xl font-extrabold text-warn mt-1">118</div>
-            </div>
-            <div class="bg-card-row-shaded rounded p-3">
+            </button>
+            <button onclick="filterContactsByStatus('dead', this)" class="contact-status-btn bg-card-row-shaded hover:bg-card-border rounded p-3 text-left transition-colors">
               <div class="text-[10px] uppercase tracking-wider text-text-subtle font-bold">Dead</div>
               <div class="text-xl font-extrabold text-text-subtle mt-1">31</div>
-            </div>
+            </button>
           </div>
 
-          <div class="text-[12px] text-text-muted mb-3">
-            Showing 5 sample contacts. In Phase 1 reps can search, filter, drill in to detail. M365 auto-logs every email, call, meeting against the right contact.
+          <!-- Local filter strip + text search -->
+          <div class="bg-card-row-shaded border border-card-border rounded-md px-3 py-2.5 mb-3 flex items-center gap-3 text-[11px] flex-wrap">
+            <div class="relative flex-1 min-w-[220px] max-w-[320px]">
+              <input id="contact-search" type="text" placeholder="Search name, title, carrier…" oninput="filterContacts()" class="w-full bg-white border border-card-border rounded pl-7 pr-3 py-1.5 text-[12px]">
+              <svg class="absolute left-2 top-2 w-3.5 h-3.5 text-text-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z"/></svg>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-text-subtle font-bold uppercase text-[9px] tracking-wider">Carrier</span>
+              <select id="contact-carrier" onchange="filterContacts()" class="bg-white border border-card-border rounded px-2 py-1 text-[11px]">
+                <option value="">All</option><option>Travelers</option><option>Nationwide</option><option>Allstate</option><option>Chubb</option><option>Liberty Mutual</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-text-subtle font-bold uppercase text-[9px] tracking-wider">LOB</span>
+              <select id="contact-lob" onchange="filterContacts()" class="bg-white border border-card-border rounded px-2 py-1 text-[11px]">
+                <option value="">All</option><option>CAT</option><option>Daily</option><option>Specialty</option><option>Multi-Line</option><option>Property</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-text-subtle font-bold uppercase text-[9px] tracking-wider">Title</span>
+              <select id="contact-title" onchange="filterContacts()" class="bg-white border border-card-border rounded px-2 py-1 text-[11px]">
+                <option value="">All</option><option>VP</option><option>Director</option><option>Manager</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-text-subtle font-bold uppercase text-[9px] tracking-wider">Last touched</span>
+              <select id="contact-touched" onchange="filterContacts()" class="bg-white border border-card-border rounded px-2 py-1 text-[11px]">
+                <option value="">Any time</option><option>Last 24h</option><option>Last 7 days</option><option>Last 30 days</option><option>Older</option>
+              </select>
+            </div>
+            <button onclick="clearContactFilters()" class="ml-auto text-text-muted hover:text-text-strong text-[10px] font-bold uppercase">Clear</button>
+          </div>
+
+          <div class="text-[12px] text-text-muted mb-3" id="contact-result-summary">
+            Showing 5 of 5 contacts in view. M365 auto-logs every email, call, meeting against the right contact.
           </div>
 
           <table class="w-full text-[12.5px]">
@@ -1289,8 +1347,8 @@
                 <th class="px-3 py-2.5">Last touched</th>
               </tr>
             </thead>
-            <tbody>
-              <tr class="border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
+            <tbody id="contact-tbody">
+              <tr data-status="qualified" data-carrier="Travelers" data-lob="CAT Property" data-title="VP" data-search="john smith vp claims travelers" data-touched="recent" class="contact-row border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
                 <td class="px-3 py-3 font-semibold text-text-strong">John Smith</td>
                 <td class="px-3 py-3 text-text-body">VP Claims</td>
                 <td class="px-3 py-3 text-text-body">Travelers</td>
@@ -1298,7 +1356,7 @@
                 <td class="px-3 py-3 text-text-body">CAT · Property</td>
                 <td class="px-3 py-3 text-text-muted">2 days ago</td>
               </tr>
-              <tr class="border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
+              <tr data-status="qualified" data-carrier="Travelers" data-lob="CAT" data-title="Director" data-search="sarah lee cat director travelers" data-touched="week" class="contact-row border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
                 <td class="px-3 py-3 font-semibold text-text-strong">Sarah Lee</td>
                 <td class="px-3 py-3 text-text-body">CAT Director</td>
                 <td class="px-3 py-3 text-text-body">Travelers</td>
@@ -1306,15 +1364,15 @@
                 <td class="px-3 py-3 text-text-body">CAT</td>
                 <td class="px-3 py-3 text-text-muted">1 week ago</td>
               </tr>
-              <tr class="border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
+              <tr data-status="active" data-carrier="Nationwide" data-lob="CAT" data-title="Director" data-search="james wu director claims ops nationwide" data-touched="recent" class="contact-row border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
                 <td class="px-3 py-3 font-semibold text-text-strong">James Wu</td>
                 <td class="px-3 py-3 text-text-body">Director of Claims Ops</td>
                 <td class="px-3 py-3 text-text-body">Nationwide</td>
-                <td class="px-3 py-3"><span class="text-[10px] font-bold text-good bg-good-bg px-2 py-0.5 rounded">Qualified</span></td>
+                <td class="px-3 py-3"><span class="text-[10px] font-bold text-good bg-good-bg px-2 py-0.5 rounded">Active</span></td>
                 <td class="px-3 py-3 text-text-body">CAT</td>
                 <td class="px-3 py-3 text-text-muted">5 days ago</td>
               </tr>
-              <tr class="border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
+              <tr data-status="unqualified" data-carrier="Travelers" data-lob="" data-title="Manager" data-search="marcus kim claims ops manager travelers" data-touched="recent" class="contact-row border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
                 <td class="px-3 py-3 font-semibold text-text-strong">Marcus Kim</td>
                 <td class="px-3 py-3 text-text-body">Claims Ops Manager</td>
                 <td class="px-3 py-3 text-text-body">Travelers</td>
@@ -1322,13 +1380,29 @@
                 <td class="px-3 py-3 text-text-muted">—</td>
                 <td class="px-3 py-3 text-text-muted">Email sent 3d ago</td>
               </tr>
-              <tr class="hover:bg-card-row-shaded cursor-pointer">
+              <tr data-status="qualified" data-carrier="Allstate" data-lob="Multi-Line" data-title="Manager" data-search="tom patel senior claims manager allstate" data-touched="recent" class="contact-row border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
                 <td class="px-3 py-3 font-semibold text-text-strong">Tom Patel</td>
                 <td class="px-3 py-3 text-text-body">Senior Claims Manager</td>
                 <td class="px-3 py-3 text-text-body">Allstate</td>
                 <td class="px-3 py-3"><span class="text-[10px] font-bold text-good bg-good-bg px-2 py-0.5 rounded">Qualified</span></td>
                 <td class="px-3 py-3 text-text-body">Multi-Line</td>
                 <td class="px-3 py-3 text-text-muted">4 days ago</td>
+              </tr>
+              <tr data-status="inactive" data-carrier="Chubb" data-lob="Specialty" data-title="VP" data-search="rachel hayes vp specialty chubb" data-touched="older" class="contact-row border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
+                <td class="px-3 py-3 font-semibold text-text-strong">Rachel Hayes</td>
+                <td class="px-3 py-3 text-text-body">VP Specialty Lines</td>
+                <td class="px-3 py-3 text-text-body">Chubb</td>
+                <td class="px-3 py-3"><span class="text-[10px] font-bold text-warn bg-warn-bg px-2 py-0.5 rounded">Inactive</span></td>
+                <td class="px-3 py-3 text-text-body">Specialty</td>
+                <td class="px-3 py-3 text-text-muted">87 days ago</td>
+              </tr>
+              <tr data-status="dead" data-carrier="Liberty Mutual" data-lob="" data-title="Director" data-search="brian carter director liberty mutual" data-touched="older" class="contact-row hover:bg-card-row-shaded cursor-pointer">
+                <td class="px-3 py-3 font-semibold text-text-strong">Brian Carter</td>
+                <td class="px-3 py-3 text-text-body">Director (formerly)</td>
+                <td class="px-3 py-3 text-text-body">Liberty Mutual</td>
+                <td class="px-3 py-3"><span class="text-[10px] font-bold text-text-muted bg-card-row-shaded px-2 py-0.5 rounded">Dead</span></td>
+                <td class="px-3 py-3 text-text-muted">—</td>
+                <td class="px-3 py-3 text-text-muted">Left role · 8 mo</td>
               </tr>
             </tbody>
           </table>
@@ -1366,6 +1440,53 @@
           </div>
         </div>
 
+        <!-- BL filter strip — live filters per Mark feedback 28 May -->
+        <div class="bg-card border border-card-border rounded-md px-3 py-2.5 mb-3 flex items-center gap-3 text-[11px] flex-wrap">
+          <div class="relative flex-1 min-w-[220px] max-w-[300px]">
+            <input id="bl-search" type="text" placeholder="Search Business Lines…" oninput="filterBLs()" class="w-full bg-white border border-card-border rounded pl-7 pr-3 py-1.5 text-[12px]">
+            <svg class="absolute left-2 top-2 w-3.5 h-3.5 text-text-subtle" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z"/></svg>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-text-subtle font-bold uppercase text-[9px] tracking-wider">Stage</span>
+            <select id="bl-stage" onchange="filterBLs()" class="bg-card-row-shaded border border-card-border rounded px-2 py-1 text-[11px]">
+              <option value="">All</option><option>Prospect</option><option>Engaged</option><option>Discovery</option><option>Proposal</option><option>Pending Activation</option><option>Onboarding</option><option>Active Client</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-text-subtle font-bold uppercase text-[9px] tracking-wider">LOB</span>
+            <select id="bl-lob" onchange="filterBLs()" class="bg-card-row-shaded border border-card-border rounded px-2 py-1 text-[11px]">
+              <option value="">All</option><option>CAT</option><option>Daily</option><option>Specialty</option><option>Multi-Line</option><option>Property</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-text-subtle font-bold uppercase text-[9px] tracking-wider">Tier</span>
+            <select id="bl-tier" onchange="filterBLs()" class="bg-card-row-shaded border border-card-border rounded px-2 py-1 text-[11px]">
+              <option value="">All</option><option>1</option><option>2</option><option>3</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-text-subtle font-bold uppercase text-[9px] tracking-wider">Priority</span>
+            <select id="bl-priority" onchange="filterBLs()" class="bg-card-row-shaded border border-card-border rounded px-2 py-1 text-[11px]">
+              <option value="">All</option><option>A</option><option>B</option><option>C</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-text-subtle font-bold uppercase text-[9px] tracking-wider">Owner</span>
+            <select id="bl-owner" onchange="filterBLs()" class="bg-card-row-shaded border border-card-border rounded px-2 py-1 text-[11px]">
+              <option value="">All</option><option>Joe R.</option><option>Diana P.</option><option>Carlos M.</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-text-subtle font-bold uppercase text-[9px] tracking-wider">Days in stage</span>
+            <select id="bl-days" onchange="filterBLs()" class="bg-card-row-shaded border border-card-border rounded px-2 py-1 text-[11px]">
+              <option value="">Any</option><option>0-7</option><option>8-21</option><option>22-45</option><option>46+</option>
+            </select>
+          </div>
+          <button onclick="clearBLFilters()" class="ml-auto text-text-muted hover:text-text-strong text-[10px] font-bold uppercase">Clear</button>
+        </div>
+
+        <div id="bl-result-summary" class="text-[11px] text-text-muted mb-2">Showing 8 of 8 BLs in view.</div>
+
         <div class="bg-card border border-card-border rounded-lg overflow-hidden">
           <table class="w-full text-[12.5px]">
             <thead class="bg-card-row-shaded border-b border-card-border">
@@ -1379,8 +1500,8 @@
                 <th class="px-3 py-2.5">Days in stage</th>
               </tr>
             </thead>
-            <tbody>
-              <tr class="border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer" onclick="showScreen('bl-detail')">
+            <tbody id="bl-tbody">
+              <tr data-stage="Discovery" data-lob="CAT" data-tier="1" data-priority="A" data-owner="Joe R." data-days="14" data-search="travelers cat" class="bl-row border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer" onclick="showScreen('bl-detail')">
                 <td class="px-5 py-3 font-semibold text-text-strong">Travelers × CAT</td>
                 <td class="px-3 py-3 text-text-body">Discovery</td>
                 <td class="px-3 py-3 text-text-body">CAT</td>
@@ -1389,7 +1510,7 @@
                 <td class="px-3 py-3 text-text-body">Joe R.</td>
                 <td class="px-3 py-3 text-text-muted">14</td>
               </tr>
-              <tr class="border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
+              <tr data-stage="Proposal" data-lob="Property" data-tier="1" data-priority="A" data-owner="Joe R." data-days="11" data-search="travelers property" class="bl-row border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
                 <td class="px-5 py-3 font-semibold text-text-strong">Travelers × Property</td>
                 <td class="px-3 py-3 text-text-body">Proposal</td>
                 <td class="px-3 py-3 text-text-body">Property</td>
@@ -1398,7 +1519,7 @@
                 <td class="px-3 py-3 text-text-body">Joe R.</td>
                 <td class="px-3 py-3 text-text-muted">11</td>
               </tr>
-              <tr class="border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
+              <tr data-stage="Active Client" data-lob="Daily" data-tier="1" data-priority="A" data-owner="Joe R." data-days="730" data-search="travelers daily" class="bl-row border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
                 <td class="px-5 py-3 font-semibold text-text-strong">Travelers × Daily</td>
                 <td class="px-3 py-3 text-good font-semibold">Active Client</td>
                 <td class="px-3 py-3 text-text-body">Daily</td>
@@ -1407,7 +1528,7 @@
                 <td class="px-3 py-3 text-text-body">Joe R.</td>
                 <td class="px-3 py-3 text-text-muted">2yr</td>
               </tr>
-              <tr class="border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
+              <tr data-stage="Proposal" data-lob="CAT" data-tier="1" data-priority="A" data-owner="Joe R." data-days="6" data-search="nationwide cat" class="bl-row border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
                 <td class="px-5 py-3 font-semibold text-text-strong">Nationwide × CAT</td>
                 <td class="px-3 py-3 text-text-body">Proposal</td>
                 <td class="px-3 py-3 text-text-body">CAT</td>
@@ -1416,7 +1537,7 @@
                 <td class="px-3 py-3 text-text-body">Joe R.</td>
                 <td class="px-3 py-3 text-text-muted">6</td>
               </tr>
-              <tr class="border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
+              <tr data-stage="Onboarding" data-lob="Property" data-tier="1" data-priority="A" data-owner="Joe R." data-days="3" data-search="liberty mutual property" class="bl-row border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
                 <td class="px-5 py-3 font-semibold text-text-strong">Liberty Mutual × Property</td>
                 <td class="px-3 py-3 text-warn font-semibold">Onboarding 🔒</td>
                 <td class="px-3 py-3 text-text-body">Property</td>
@@ -1425,7 +1546,7 @@
                 <td class="px-3 py-3 text-text-body">Joe R.</td>
                 <td class="px-3 py-3 text-text-muted">3</td>
               </tr>
-              <tr class="border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
+              <tr data-stage="Pending Activation" data-lob="Specialty" data-tier="1" data-priority="B" data-owner="Joe R." data-days="23" data-search="chubb specialty" class="bl-row border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
                 <td class="px-5 py-3 font-semibold text-text-strong">Chubb × Specialty</td>
                 <td class="px-3 py-3 text-text-body">Pending Activation</td>
                 <td class="px-3 py-3 text-text-body">Specialty</td>
@@ -1434,7 +1555,7 @@
                 <td class="px-3 py-3 text-text-body">Joe R.</td>
                 <td class="px-3 py-3 text-text-muted">23</td>
               </tr>
-              <tr class="border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
+              <tr data-stage="Engaged" data-lob="Multi-Line" data-tier="2" data-priority="B" data-owner="Joe R." data-days="4" data-search="allstate multi-line" class="bl-row border-b border-card-border-soft hover:bg-card-row-shaded cursor-pointer">
                 <td class="px-5 py-3 font-semibold text-text-strong">Allstate × Multi-Line</td>
                 <td class="px-3 py-3 text-text-body">Engaged</td>
                 <td class="px-3 py-3 text-text-body">Multi-Line</td>
@@ -1443,7 +1564,7 @@
                 <td class="px-3 py-3 text-text-body">Joe R.</td>
                 <td class="px-3 py-3 text-text-muted">4</td>
               </tr>
-              <tr class="hover:bg-card-row-shaded cursor-pointer">
+              <tr data-stage="Prospect" data-lob="CAT" data-tier="3" data-priority="C" data-owner="Joe R." data-days="5" data-search="erie cat" class="bl-row hover:bg-card-row-shaded cursor-pointer">
                 <td class="px-5 py-3 font-semibold text-text-strong">Erie × CAT</td>
                 <td class="px-3 py-3 text-text-body">Prospect</td>
                 <td class="px-3 py-3 text-text-body">CAT</td>
@@ -1804,11 +1925,16 @@
           </div>
         </div>
 
+        <!-- Owner-vantage callout (Mark feedback 28 May) -->
+        <div class="mgr-owner-only bg-da-owned-tint border border-da-owned/30 rounded-md px-4 py-2.5 mb-3 text-[11.5px] text-text-strong">
+          <strong>Owner-vantage rework (per Mark, 28 May):</strong> the Day-1 report set below is being reshaped from rep-perspective to owner-perspective. The reports listed reflect what Mark needs to see across reps and across the business, not per-rep slices. Final cut pending Mark&rsquo;s Day-1 triage.
+        </div>
+
         <!-- Manager / Owner reports — full set -->
         <div class="mgr-owner-only bg-card border border-card-border rounded-lg overflow-hidden mb-4">
           <div class="px-5 py-3 border-b border-card-border bg-card-row-shaded">
-            <h3 class="text-[13px] font-bold text-text-strong">Phase 1 reports (Day 1)</h3>
-            <div class="text-[11px] text-text-muted">Full set across all reps + audit reports</div>
+            <h3 class="text-[13px] font-bold text-text-strong">Phase 1 reports (Day 1) — Owner-vantage focus</h3>
+            <div class="text-[11px] text-text-muted">Cross-rep + cross-carrier views. Tailored to Mark&rsquo;s vantage.</div>
           </div>
           <div class="divide-y divide-card-border-soft">
             <div class="px-5 py-3 hover:bg-card-row-shaded cursor-pointer flex items-center justify-between">
@@ -2056,6 +2182,132 @@
 
     // Always land on the role-appropriate dashboard after a role switch
     goToDashboard();
+  }
+
+  // =================================================================
+  // CONTACTS — live status filter buttons + search + filter strip
+  // =================================================================
+  let contactStatusFilter = 'all';
+
+  function filterContactsByStatus(status, btn) {
+    contactStatusFilter = status;
+    document.querySelectorAll('.contact-status-btn').forEach(b => {
+      b.classList.remove('active', 'ring-2', 'ring-nav-navy');
+      // Reset to baseline visual
+    });
+    if (btn) {
+      btn.classList.add('active');
+      // Visual emphasis on active button
+      btn.style.outline = '2px solid #1a2b3c';
+      btn.style.outlineOffset = '-2px';
+    }
+    document.querySelectorAll('.contact-status-btn').forEach(b => {
+      if (b !== btn) { b.style.outline = ''; b.style.outlineOffset = ''; }
+    });
+    filterContacts();
+  }
+
+  function filterContacts() {
+    const search = (document.getElementById('contact-search')?.value || '').toLowerCase().trim();
+    const carrier = document.getElementById('contact-carrier')?.value || '';
+    const lob = document.getElementById('contact-lob')?.value || '';
+    const title = document.getElementById('contact-title')?.value || '';
+    const touched = document.getElementById('contact-touched')?.value || '';
+    const rows = document.querySelectorAll('.contact-row');
+    let visible = 0;
+    rows.forEach(row => {
+      const status = row.dataset.status;
+      const rCarrier = row.dataset.carrier;
+      const rLob = row.dataset.lob || '';
+      const rTitle = row.dataset.title || '';
+      const rSearch = row.dataset.search || '';
+      const rTouched = row.dataset.touched || '';
+
+      let show = true;
+      if (contactStatusFilter !== 'all' && status !== contactStatusFilter) show = false;
+      if (search && !rSearch.includes(search)) show = false;
+      if (carrier && rCarrier !== carrier) show = false;
+      if (lob && !rLob.toLowerCase().includes(lob.toLowerCase())) show = false;
+      if (title && !rTitle.includes(title)) show = false;
+      if (touched) {
+        const map = {'Last 24h': 'recent', 'Last 7 days': 'recent week', 'Last 30 days': 'recent week', 'Older': 'older'};
+        const matchKey = map[touched] || '';
+        if (matchKey && !matchKey.includes(rTouched)) show = false;
+      }
+      row.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    const summary = document.getElementById('contact-result-summary');
+    if (summary) summary.textContent = `Showing ${visible} of ${rows.length} contacts in view. M365 auto-logs every email, call, meeting against the right contact.`;
+  }
+
+  function clearContactFilters() {
+    document.getElementById('contact-search').value = '';
+    document.getElementById('contact-carrier').value = '';
+    document.getElementById('contact-lob').value = '';
+    document.getElementById('contact-title').value = '';
+    document.getElementById('contact-touched').value = '';
+    filterContactsByStatus('all', document.querySelector('.contact-status-btn'));
+  }
+
+  // =================================================================
+  // BUSINESS LINES — live filter strip + text search
+  // =================================================================
+  function filterBLs() {
+    const search = (document.getElementById('bl-search')?.value || '').toLowerCase().trim();
+    const stage = document.getElementById('bl-stage')?.value || '';
+    const lob = document.getElementById('bl-lob')?.value || '';
+    const tier = document.getElementById('bl-tier')?.value || '';
+    const priority = document.getElementById('bl-priority')?.value || '';
+    const owner = document.getElementById('bl-owner')?.value || '';
+    const days = document.getElementById('bl-days')?.value || '';
+    const rows = document.querySelectorAll('.bl-row');
+    let visible = 0;
+    rows.forEach(row => {
+      let show = true;
+      if (search && !(row.dataset.search || '').includes(search)) show = false;
+      if (stage && row.dataset.stage !== stage) show = false;
+      if (lob && row.dataset.lob !== lob) show = false;
+      if (tier && row.dataset.tier !== tier) show = false;
+      if (priority && row.dataset.priority !== priority) show = false;
+      if (owner && row.dataset.owner !== owner) show = false;
+      if (days) {
+        const d = parseInt(row.dataset.days, 10);
+        if (days === '0-7' && (d < 0 || d > 7)) show = false;
+        else if (days === '8-21' && (d < 8 || d > 21)) show = false;
+        else if (days === '22-45' && (d < 22 || d > 45)) show = false;
+        else if (days === '46+' && d < 46) show = false;
+      }
+      row.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    const summary = document.getElementById('bl-result-summary');
+    if (summary) summary.textContent = `Showing ${visible} of ${rows.length} BLs in view.`;
+  }
+
+  function clearBLFilters() {
+    ['bl-search', 'bl-stage', 'bl-lob', 'bl-tier', 'bl-priority', 'bl-owner', 'bl-days'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    filterBLs();
+  }
+
+  // =================================================================
+  // ACCOUNT DETAIL — per-BL contact tab (Mark feedback 28 May)
+  // =================================================================
+  function filterAccountContacts(blKey, btn) {
+    document.querySelectorAll('.acct-contact-tab').forEach(t => {
+      t.classList.remove('active', 'border-brand-lime', 'bg-brand-lime-tint', 'text-nav-navy');
+      t.classList.add('border-transparent', 'text-text-muted');
+    });
+    btn.classList.add('active', 'border-brand-lime', 'bg-brand-lime-tint', 'text-nav-navy');
+    btn.classList.remove('border-transparent', 'text-text-muted');
+
+    document.querySelectorAll('.acct-contact-row').forEach(row => {
+      const bls = (row.dataset.bls || '').split(' ');
+      row.style.display = bls.includes(blKey) ? '' : 'none';
+    });
   }
 </script>
 
